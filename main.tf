@@ -36,6 +36,11 @@ module "aoss" {
   bedrockIAMRole = module.iam.bedrockIAMRoleArn
 }
 
+resource "time_sleep" "timesleep" {
+  create_duration = "20s"
+  depends_on      = [module.iam]
+}
+
 module "bedrock" {
   source = "./modules/bedrock"
   vector_index = module.aoss.vector_index
@@ -45,5 +50,5 @@ module "bedrock" {
   bedrockIAMRoleArn = module.iam.bedrockIAMRoleArn
   aossCollectionArn = module.aoss.aossCollectionArn
   aws_s3_bucket_arn = module.s3.aws_s3_bucket_arn
-  depends_on = [module.s3, module.iam, module.aoss]
+  depends_on = [module.s3, module.iam, module.aoss, time_sleep.timesleep]
 }

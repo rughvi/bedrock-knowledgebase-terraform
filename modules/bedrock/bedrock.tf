@@ -1,9 +1,10 @@
 data "aws_bedrock_foundation_model" "embedding" {
   model_id = "amazon.titan-embed-text-v2:0"
 }
+
 resource "aws_bedrockagent_knowledge_base" "this" {
   name     = "test-kb"
-  role_arn = var.bedrockIAMRoleArn #iam_role.bedrock.arn
+  role_arn = var.bedrockIAMRoleArn
 
   knowledge_base_configuration {
     type = "VECTOR"
