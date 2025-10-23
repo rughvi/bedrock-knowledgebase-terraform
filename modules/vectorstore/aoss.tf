@@ -20,7 +20,9 @@ resource "aws_opensearchserverless_collection" "collection" {
   type             = "VECTORSEARCH"
   standby_replicas = "DISABLED"
 
-  depends_on = [aws_opensearchserverless_security_policy.encryption_policy]
+  depends_on = [aws_opensearchserverless_access_policy.data_access_policy, 
+    aws_opensearchserverless_security_policy.encryption_policy, 
+    aws_opensearchserverless_security_policy.network_policy]
 }
 
 # Creates an encryption security policy
@@ -47,22 +49,6 @@ resource "aws_opensearchserverless_security_policy" "network_policy" {
   type        = "network"
   description = "public access for dashboard, VPC access for collection endpoint"
   policy = jsonencode([
-    ###References for using VPC endpoints
-    # {
-    #   Description = "VPC access for collection endpoint",
-    #   Rules = [
-    #     {
-    #       ResourceType = "collection",
-    #       Resource = [
-    #         "collection/${local.env.sid}-collection}"
-    #       ]
-    #     }
-    #   ],
-    #   AllowFromPublic = false,
-    #   SourceVPCEs = [
-    #     aws_opensearchserverless_vpc_endpoint.vpc_endpoint.id
-    #   ]
-    # },
     {
       Description = "Public access for dashboards and collection",
       Rules = [

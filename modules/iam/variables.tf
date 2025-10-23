@@ -5,3 +5,7 @@ variable "awsAccountId" {
 variable "bedrockS3ARN" {
     type = string
 }
+
+variable "awsRegion" {
+    type = string
+}

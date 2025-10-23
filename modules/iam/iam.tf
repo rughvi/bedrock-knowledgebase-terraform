@@ -1,49 +1,64 @@
-resource "aws_iam_role" "bedrock" {
-  name                = "bedrock-role"
-  managed_policy_arns = [aws_iam_policy.bedrock.arn]
-
+resource "aws_iam_role" "bedrock_role" {
+  name = "bedrock_role"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "bedrock.amazonaws.com"
+    "Version": "2012-10-17",
+    "Statement": [{
+        "Effect": "Allow",
+        "Principal": {
+            "Service": "bedrock.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole",
+        "Condition": {
+            "StringEquals": {
+                "aws:SourceAccount": "${var.awsAccountId}"
+            },
+            "ArnLike": {
+                "AWS:SourceArn": "arn:aws:bedrock:${var.awsRegion}:${var.awsAccountId}:knowledge-base/*"
+            }
         }
-      },
-    ]
+    }]
   })
 }
 
-resource "aws_iam_policy" "bedrock" {
-  name = "bedrock-policy"
+resource "aws_iam_role_policy" "bedrock_policy" {
+  name = "bedrock_policy"
+  role = aws_iam_role.bedrock_role.name
 
   policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = ["bedrock:InvokeModel"]
-        Effect   = "Allow"
-        Resource = "*"
-      },
-      {
-        Action = [
-          "s3:GetObject",
-          "s3:ListBucket",
-        ]
-        Effect   = "Allow"
-        Resource = "${var.bedrockS3ARN}" ###aws_s3_bucket.bedrock.arn ###### ARN of the S3 bucket that was
-      },
-      {
-        Action = [
-          "aoss:APIAccessAll",
-        ]
-        Effect   = "Allow"
-        Resource = "arn:aws:aoss:uk-west-2:${var.awsAccountId}:collection/*"
-      },
-
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "bedrock:ListFoundationModels",
+                "bedrock:ListCustomModels"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "bedrock:InvokeModel"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Sid": "S3ListBucketStatement",
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": "${var.bedrockS3ARN}"
+        },
+        {
+            Action = [
+              "aoss:APIAccessAll",
+            ]
+            Effect   = "Allow"
+            Resource = "arn:aws:aoss:${var.awsRegion}:${var.awsAccountId}:collection/*"
+        },
     ]
   })
 }
