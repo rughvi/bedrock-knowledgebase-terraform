@@ -19,10 +19,15 @@ terraform {
   }
 }
 
+module "s3" {
+  source = "./modules/s3"
+  bedrockS3Bucket = "${var.bedrockS3Bucket}"
+}
+
 module "iam" {
   source = "./modules/iam"
   awsAccountId = var.awsAccountId
-  bedrockS3ARN = aws_s3_bucket.bedrock.arn
+  bedrockS3ARN = module.s3.aws_s3_bucket_arn
 }
 
 module "aoss" {
