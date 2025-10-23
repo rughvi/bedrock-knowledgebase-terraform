@@ -34,7 +34,7 @@ resource "aws_iam_policy" "bedrock" {
           "s3:ListBucket",
         ]
         Effect   = "Allow"
-        Resource = aws_s3_bucket.bedrock.arn ###### ARN of the S3 bucket that was
+        Resource = "${var.bedrockS3ARN}" ###aws_s3_bucket.bedrock.arn ###### ARN of the S3 bucket that was
       },
       {
         Action = [

@@ -1,3 +1,17 @@
+terraform {
+   required_providers {
+    # https://registry.terraform.io/providers/hashicorp/aws/
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    opensearch = {
+      source  = "opensearch-project/opensearch"
+      version = "2.2.0"
+    }
+  }
+}
+
 data "aws_caller_identity" "current" {}
 
 # Creates a collection
@@ -98,8 +112,8 @@ resource "aws_opensearchserverless_access_policy" "data_access_policy" {
         }
       ],
       Principal = [
-        data.aws_caller_identity.current.arn,
-        aws_iam_role.bedrock.arn,
+        data.aws_caller_identity.current.arn,        
+        "${var.bedrockIAMRole}"
       ]
     }
   ])

@@ -1,0 +1,3 @@
+variable "bedrockIAMRole" {
+    type = string
+}

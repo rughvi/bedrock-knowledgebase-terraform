@@ -18,3 +18,14 @@ terraform {
     encrypt = true
   }
 }
+
+module "iam" {
+  source = "./modules/iam"
+  awsAccountId = var.awsAccountId
+  bedrockS3ARN = aws_s3_bucket.bedrock.arn
+}
+
+module "aoss" {
+  source = "./modules/vectorstore"
+  bedrockIAMRole = module.iam.bedrockIAMRoleArn
+}
