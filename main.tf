@@ -24,12 +24,18 @@ module "s3" {
   bedrockS3Bucket = "${var.bedrockS3Bucket}"
 }
 
+module "secretmanager" {
+  source = "./modules/secretmanager"
+  pinecone_apikey_seceret_value=var.pinecone_apikey
+}
+
 module "iam" {
   source = "./modules/iam"
   awsAccountId = var.awsAccountId
   bedrockS3ARN = module.s3.aws_s3_bucket_arn
   awsRegion = local.env.region_name
-  pinecone_apikey_secret_arn = var.pinecone_apikey_secret_arn
+  pinecone_apikey_secret_arn = module.secretmanager.pinecone_apikey_secret_arn
+  depends_on = [module.s3, module.secretmanager]
 }
 
 resource "time_sleep" "timesleep" {
@@ -42,6 +48,6 @@ module "bedrock" {
   bedrockIAMRoleArn = module.iam.bedrockIAMRoleArn
   aws_s3_bucket_arn = module.s3.aws_s3_bucket_arn
   pinecone_host= var.pinecone_host
-  pinecone_apikey_secret_arn = var.pinecone_apikey_secret_arn
-  depends_on = [module.s3, module.iam, time_sleep.timesleep]
+  pinecone_apikey_secret_arn = module.secretmanager.pinecone_apikey_secret_arn
+  depends_on = [module.s3, module.iam, module.secretmanager, time_sleep.timesleep]
 }

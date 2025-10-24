@@ -11,6 +11,6 @@ variable "pinecone_host" {
     type = string
 }
 
-variable "pinecone_apikey_secret_arn" {
+variable "pinecone_apikey" {
     type = string
 }
