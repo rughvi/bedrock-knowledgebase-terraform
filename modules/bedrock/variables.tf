@@ -1,27 +1,15 @@
-variable "vector_index" {
-    type = string
-}
-
-variable "vector_field" {
-    type = string
-}
-
-variable "text_field" {
-    type = string
-}
-
-variable "metadata_field" {
-    type = string
-}
-
 variable "bedrockIAMRoleArn" {
     type = string
 }
 
-variable "aossCollectionArn" {
+variable "aws_s3_bucket_arn" {
     type = string
 }
 
-variable "aws_s3_bucket_arn" {
+variable "pinecone_host" {
+    type = string
+}
+
+variable "pinecone_apikey_secret_arn" {
     type = string
 }

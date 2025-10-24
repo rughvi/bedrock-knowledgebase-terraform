@@ -9,3 +9,7 @@ variable "bedrockS3ARN" {
 variable "awsRegion" {
     type = string
 }
+
+variable "pinecone_apikey_secret_arn" {
+    type = string
+}

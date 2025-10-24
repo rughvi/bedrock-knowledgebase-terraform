@@ -6,3 +6,11 @@ variable "bedrockS3Bucket" {
 variable "awsAccountId" {
     type = string
 }
+
+variable "pinecone_host" {
+    type = string
+}
+
+variable "pinecone_apikey_secret_arn" {
+    type = string
+}

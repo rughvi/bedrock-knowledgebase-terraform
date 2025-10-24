@@ -14,16 +14,15 @@ resource "aws_bedrockagent_knowledge_base" "this" {
   }
 
   storage_configuration {
-    type = "OPENSEARCH_SERVERLESS"
-    opensearch_serverless_configuration {
-      collection_arn    = var.aossCollectionArn
-      vector_index_name = var.vector_index
+    type = "PINECONE"
+    pinecone_configuration {
+      connection_string    = "${var.pinecone_host}"
+      credentials_secret_arn = "${var.pinecone_apikey_secret_arn}"
       field_mapping {
-        vector_field   = var.vector_field
-        text_field     = var.text_field
-        metadata_field = var.metadata_field
+        text_field     = "question"
+        metadata_field = "metadata"
       }
-    }
+    }    
   }
 }
 

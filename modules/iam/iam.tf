@@ -54,10 +54,10 @@ resource "aws_iam_role_policy" "bedrock_policy" {
         },
         {
             Action = [
-              "aoss:APIAccessAll",
+              "secretsmanager:GetSecretValue",
             ]
             Effect   = "Allow"
-            Resource = "arn:aws:aoss:${var.awsRegion}:${var.awsAccountId}:collection/*"
+            Resource = var.pinecone_apikey_secret_arn
         },
     ]
   })

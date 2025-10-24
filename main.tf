@@ -29,11 +29,7 @@ module "iam" {
   awsAccountId = var.awsAccountId
   bedrockS3ARN = module.s3.aws_s3_bucket_arn
   awsRegion = local.env.region_name
-}
-
-module "aoss" {
-  source = "./modules/vectorstore"
-  bedrockIAMRole = module.iam.bedrockIAMRoleArn
+  pinecone_apikey_secret_arn = var.pinecone_apikey_secret_arn
 }
 
 resource "time_sleep" "timesleep" {
@@ -43,12 +39,9 @@ resource "time_sleep" "timesleep" {
 
 module "bedrock" {
   source = "./modules/bedrock"
-  vector_index = module.aoss.vector_index
-  vector_field = module.aoss.vector_field
-  text_field = module.aoss.text_field
-  metadata_field = module.aoss.metadata_field
   bedrockIAMRoleArn = module.iam.bedrockIAMRoleArn
-  aossCollectionArn = module.aoss.aossCollectionArn
   aws_s3_bucket_arn = module.s3.aws_s3_bucket_arn
-  depends_on = [module.s3, module.iam, module.aoss, time_sleep.timesleep]
+  pinecone_host= var.pinecone_host
+  pinecone_apikey_secret_arn = var.pinecone_apikey_secret_arn
+  depends_on = [module.s3, module.iam, time_sleep.timesleep]
 }
