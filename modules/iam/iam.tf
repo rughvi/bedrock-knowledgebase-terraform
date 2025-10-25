@@ -48,9 +48,17 @@ resource "aws_iam_role_policy" "bedrock_policy" {
             "Sid": "S3ListBucketStatement",
             "Effect": "Allow",
             "Action": [
-                "s3:*"
+                "s3:ListBucket"
             ],
-            "Resource": "${var.bedrockS3ARN}"
+            "Resource": ["${var.bedrockS3ARN}"]
+        },
+        {
+            "Sid": "S3GetObjectStatement",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": ["${var.bedrockS3ARN}/*"]
         },
         {
             Action = [
