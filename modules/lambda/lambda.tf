@@ -12,6 +12,13 @@ resource "aws_lambda_function" "lambda_knowledgebase_sync_function" {
   runtime       = "python3.12"
   handler       = "lambda_function.lambda_handler"
   timeout       = 10
+
+  environment {
+    variables = {
+      DATASOURCEID = "${var.bedrock_knowledgebase_id}"
+      KNOWLEDGEBASEID = "${var.bedrock_datasource_id}"
+    }
+  }
 }
 
 resource "aws_lambda_permission" "allow_bucket" {

@@ -38,14 +38,6 @@ module "iam" {
   depends_on = [module.s3, module.secretmanager]
 }
 
-module "lambda" {
-  source = "./modules/lambda"
-  lambda_execution_role_arn = module.iam.lambda_execution_role_arn
-  bedrock_s3_arn = module.s3.aws_s3_bucket.arn
-  bedrock_s3_id = module.s3.aws_s3_bucket.id
-  depends_on = [module.s3, module.iam]
-}
-
 resource "time_sleep" "timesleep" {
   create_duration = "20s"
   depends_on      = [module.iam]
@@ -58,4 +50,14 @@ module "bedrock" {
   pinecone_host= var.pinecone_host
   pinecone_apikey_secret_arn = module.secretmanager.pinecone_apikey_secret_arn
   depends_on = [module.s3, module.iam, module.secretmanager, time_sleep.timesleep]
+}
+
+module "lambda" {
+  source = "./modules/lambda"
+  lambda_execution_role_arn = module.iam.lambda_execution_role_arn
+  bedrock_s3_arn = module.s3.aws_s3_bucket.arn
+  bedrock_s3_id = module.s3.aws_s3_bucket.id
+  bedrock_knowledgebase_id = module.bedrock.bedrock_knowledgebase_id
+  bedrock_datasource_id = module.bedrock.bedrock_datasource_id
+  depends_on = [module.s3, module.iam, module.bedrock]
 }
