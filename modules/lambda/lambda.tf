@@ -15,8 +15,8 @@ resource "aws_lambda_function" "lambda_knowledgebase_sync_function" {
 
   environment {
     variables = {
-      DATASOURCEID = "${var.bedrock_knowledgebase_id}"
-      KNOWLEDGEBASEID = "${var.bedrock_datasource_id}"
+      DATASOURCEID = "${var.bedrock_datasource_id}"
+      KNOWLEDGEBASEID = "${var.bedrock_knowledgebase_id}"
     }
   }
 }

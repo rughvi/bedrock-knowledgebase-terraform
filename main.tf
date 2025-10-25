@@ -49,7 +49,7 @@ module "bedrock" {
   aws_s3_bucket_arn = module.s3.aws_s3_bucket.arn
   pinecone_host= var.pinecone_host
   pinecone_apikey_secret_arn = module.secretmanager.pinecone_apikey_secret_arn
-  depends_on = [module.s3, module.iam, module.secretmanager, time_sleep.timesleep]
+  depends_on = [module.s3, module.iam, module.secretmanager]
 }
 
 module "lambda" {
@@ -58,6 +58,6 @@ module "lambda" {
   bedrock_s3_arn = module.s3.aws_s3_bucket.arn
   bedrock_s3_id = module.s3.aws_s3_bucket.id
   bedrock_knowledgebase_id = module.bedrock.bedrock_knowledgebase_id
-  bedrock_datasource_id = module.bedrock.bedrock_datasource_id
-  depends_on = [module.s3, module.iam, module.bedrock]
+  bedrock_datasource_id = split(",", module.bedrock.bedrock_datasource_id)[0]
+  depends_on = [module.s3, module.iam, module.bedrock, time_sleep.timesleep]
 }
