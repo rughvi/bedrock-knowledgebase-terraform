@@ -49,6 +49,8 @@ module "bedrock" {
   aws_s3_bucket_arn = module.s3.aws_s3_bucket.arn
   pinecone_host= var.pinecone_host
   pinecone_apikey_secret_arn = module.secretmanager.pinecone_apikey_secret_arn
+  awsAccountId = var.awsAccountId
+  awsRegion = local.env.region_name
   depends_on = [module.s3, module.iam, module.secretmanager]
 }
 

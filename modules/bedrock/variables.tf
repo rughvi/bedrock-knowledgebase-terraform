@@ -13,3 +13,11 @@ variable "pinecone_host" {
 variable "pinecone_apikey_secret_arn" {
     type = string
 }
+
+variable "awsRegion" {
+    type = string
+}
+
+variable "awsAccountId" {
+    type = string
+}
