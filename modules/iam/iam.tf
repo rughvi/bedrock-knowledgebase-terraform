@@ -80,8 +80,36 @@ resource "aws_iam_role" "lambda_execution_role" {
   })
 }
 
-resource "aws_iam_policy_attachment" "lambda_basic_execution" {
-  name       = "lambda_basic_execution-attachment"
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  roles      = [aws_iam_role.lambda_execution_role.name]
+resource "aws_iam_role_policy" "lambda_policy" {
+  name = "lambda_policy"
+  role = aws_iam_role.lambda_execution_role.name
+
+  policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "bedrock:StartIngestionJob"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "bedrock:AssociateThirdPartyKnowledgeBase"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]    
+  })
 }
