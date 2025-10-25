@@ -2,7 +2,7 @@ data "aws_bedrock_foundation_model" "embedding" {
   model_id = "amazon.titan-embed-text-v2:0"
 }
 
-resource "aws_bedrockagent_knowledge_base" "this" {
+resource "aws_bedrockagent_knowledge_base" "bedrock_knowledgebase" {
   name     = "test-kb"
   role_arn = var.bedrockIAMRoleArn
 
@@ -26,8 +26,8 @@ resource "aws_bedrockagent_knowledge_base" "this" {
   }
 }
 
-resource "aws_bedrockagent_data_source" "this" {
-  knowledge_base_id = aws_bedrockagent_knowledge_base.this.id
+resource "aws_bedrockagent_data_source" "bedrock_datasource" {
+  knowledge_base_id = aws_bedrockagent_knowledge_base.bedrock_knowledgebase.id
   name              = "test-s3-001"
   data_source_configuration {
     type = "S3"
@@ -36,5 +36,5 @@ resource "aws_bedrockagent_data_source" "this" {
     }
   }
 
-  depends_on = [aws_bedrockagent_knowledge_base.this]
+  depends_on = [aws_bedrockagent_knowledge_base.bedrock_knowledgebase]
 }
